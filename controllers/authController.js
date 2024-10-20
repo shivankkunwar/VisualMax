@@ -1,4 +1,4 @@
-const usersDB = {}; // In-memory user storage for simplicity
+const usersDB = {};
 
 exports.signUp = (req, res) => {
   const { username, password } = req.body;

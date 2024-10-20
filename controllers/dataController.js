@@ -1,11 +1,13 @@
-const xlsx = require('xlsx');
-const { processData } = require('../utils/dataProcessor');
+const xlsx = require("xlsx");
+const { processData } = require("../utils/dataProcessor");
 
-const workbook = xlsx.readFile('./data/Frontend Developer Assignment Data.xlsx');
+const workbook = xlsx.readFile(
+  "./data/Frontend Developer Assignment Data.xlsx"
+);
 const processedData = processData(workbook);
 
 exports.getData = (req, res) => {
-    const { startDate, endDate, ageFilter, genderFilter } = req.body;
+  const { startDate, endDate, ageFilter, genderFilter } = req.body;
 
   // Filter data based on user selection
   const filteredData = processedData.filter((row) => {
@@ -13,8 +15,8 @@ exports.getData = (req, res) => {
     return (
       rowDate >= new Date(startDate) &&
       rowDate <= new Date(endDate) &&
-      (ageFilter === 'all' || row.age === ageFilter) &&
-      (genderFilter === 'all' || row.gender === genderFilter)
+      (ageFilter === "all" || row.age === ageFilter) &&
+      (genderFilter === "all" || row.gender === genderFilter)
     );
   });
 
@@ -33,25 +35,20 @@ exports.getData = (req, res) => {
   }));
 
   res.json(result);
-  };
+};
 
- exports.getTrend = (req, res) => {
-    const { feature, startDate, endDate } = req.body;
-    console.log("reched 1")
-    // Filter processedData based on feature and date range
-    const filteredData = processedData.filter(row => {
-      const rowDate = row.day;
-      return (
-        rowDate >= new Date(startDate) &&
-        rowDate <= new Date(endDate)
-      );
-    });
-  
-    console.log("reched 2")
-    const trendData = filteredData.map(row => ({
-      date: row.day.toISOString().split('T')[0], 
-      value: row.features[feature] || 0, 
-    }));
-  console.log(trendData)
-    res.json(trendData);
-  }
+exports.getTrend = (req, res) => {
+  const { feature, startDate, endDate } = req.body;
+
+  const filteredData = processedData.filter((row) => {
+    const rowDate = row.day;
+    return rowDate >= new Date(startDate) && rowDate <= new Date(endDate);
+  });
+
+  const trendData = filteredData.map((row) => ({
+    date: row.day.toISOString().split("T")[0],
+    value: row.features[feature] || 0,
+  }));
+
+  res.json(trendData);
+};
